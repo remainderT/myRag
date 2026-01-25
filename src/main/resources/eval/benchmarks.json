@@ -1,0 +1,17 @@
+[
+  {
+    "id": "eval-001",
+    "question": "综测加分如何计算？",
+    "expectedKeywords": ["综测", "加分"]
+  },
+  {
+    "id": "eval-002",
+    "question": "请假超过三天需要谁审批？",
+    "expectedKeywords": ["请假", "审批"]
+  },
+  {
+    "id": "eval-003",
+    "question": "转专业需要满足哪些条件？",
+    "expectedKeywords": ["转专业", "条件"]
+  }
+]

@@ -1,0 +1,76 @@
+package buaa.rag.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+/**
+ * RAG检索增强配置
+ */
+@Component
+@ConfigurationProperties(prefix = "rag")
+@Data
+public class RagConfiguration {
+
+    private Rewrite rewrite = new Rewrite();
+    private Hyde hyde = new Hyde();
+    private Fusion fusion = new Fusion();
+    private Rerank rerank = new Rerank();
+    private Routing routing = new Routing();
+    private Crag crag = new Crag();
+    private Feedback feedback = new Feedback();
+
+    @Data
+    public static class Rewrite {
+        private boolean enabled = true;
+        private int variants = 3;
+        private String prompt;
+    }
+
+    @Data
+    public static class Hyde {
+        private boolean enabled = false;
+        private int maxTokens = 256;
+        private String prompt;
+    }
+
+    @Data
+    public static class Fusion {
+        private boolean enabled = true;
+        private int rrfK = 60;
+        private int maxQueries = 4;
+    }
+
+    @Data
+    public static class Rerank {
+        private boolean enabled = true;
+        private int maxCandidates = 8;
+        private int snippetLength = 200;
+        private String prompt;
+    }
+
+    @Data
+    public static class Routing {
+        private boolean enabled = true;
+        private boolean useLlm = false;
+        private int maxTags = 4;
+        private String prompt;
+    }
+
+    @Data
+    public static class Crag {
+        private boolean enabled = true;
+        private boolean useLlm = true;
+        private double minScore = 0.2;
+        private int reviewTopK = 3;
+        private int fallbackMultiplier = 2;
+        private String prompt;
+        private String clarifyPrompt;
+    }
+
+    @Data
+    public static class Feedback {
+        private boolean enabled = true;
+        private double maxBoost = 0.15;
+    }
+}

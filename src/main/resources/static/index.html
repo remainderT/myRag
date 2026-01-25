@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base" content="">
+    <title>北航智能助手</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- 飞机剪影 -->
+                                <path d="M20 8L32 20L28 22L20 18L12 22L8 20L20 8Z" fill="currentColor" opacity="0.9"/>
+                                <path d="M20 18V32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M14 28L20 32L26 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="logo-text">
+                            <h1 class="logo-title">北航智能助手</h1>
+                            <p class="logo-subtitle">BUAA AI Assistant</p>
+                        </div>
+                    </div>
+                    <button class="new-chat-btn" type="button" onclick="location.reload()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        <span>新对话</span>
+                    </button>
+                </div>
+
+                <nav class="nav-menu">
+                    <a class="nav-item active" href="index.html">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        <span>对话</span>
+                    </a>
+                    <a class="nav-item" href="docs.html">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                        </svg>
+                        <span>文档管理</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <div class="system-status">
+                        <div class="status-indicator"></div>
+                        <span>系统正常</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="chat-container">
+                <!-- 消息列表 -->
+                <div class="messages-wrapper" id="chat-messages">
+                    <div class="welcome-screen">
+                        <div class="welcome-icon">
+                            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="30" cy="30" r="28" stroke="url(#gradient1)" stroke-width="2" opacity="0.5"/>
+                                <path d="M30 12L42 24L38 26L30 22L22 26L18 24L30 12Z" fill="url(#gradient2)"/>
+                                <path d="M30 22V36" stroke="url(#gradient2)" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M24 32L30 36L36 32" stroke="url(#gradient2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <defs>
+                                    <linearGradient id="gradient1" x1="0" y1="0" x2="60" y2="60">
+                                        <stop offset="0%" stop-color="#0052D9"/>
+                                        <stop offset="100%" stop-color="#0085FF"/>
+                                    </linearGradient>
+                                    <linearGradient id="gradient2" x1="0" y1="0" x2="60" y2="60">
+                                        <stop offset="0%" stop-color="#0052D9"/>
+                                        <stop offset="100%" stop-color="#0085FF"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2 class="welcome-title">你好，我是北航智能助手</h2>
+                        <p class="welcome-subtitle">基于校园知识库，为你解答学务、教务相关问题</p>
+
+                        <div class="suggestion-grid">
+                            <button class="suggestion-card" onclick="document.getElementById('chat-input').value='综合测评的计算方式是什么？'; document.getElementById('chat-input').focus();">
+                                <div class="suggestion-icon">📊</div>
+                                <div class="suggestion-text">综合测评的计算方式是什么？</div>
+                            </button>
+                            <button class="suggestion-card" onclick="document.getElementById('chat-input').value='请假流程需要哪些步骤？'; document.getElementById('chat-input').focus();">
+                                <div class="suggestion-icon">📝</div>
+                                <div class="suggestion-text">请假流程需要哪些步骤？</div>
+                            </button>
+                            <button class="suggestion-card" onclick="document.getElementById('chat-input').value='如何申请奖学金？'; document.getElementById('chat-input').focus();">
+                                <div class="suggestion-icon">🏆</div>
+                                <div class="suggestion-text">如何申请奖学金？</div>
+                            </button>
+                            <button class="suggestion-card" onclick="document.getElementById('chat-input').value='转专业需要什么条件？'; document.getElementById('chat-input').focus();">
+                                <div class="suggestion-icon">🎓</div>
+                                <div class="suggestion-text">转专业需要什么条件？</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 参考来源 -->
+                <div class="sources-panel" id="sources-panel" style="display: none;">
+                    <div class="sources-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                        <span>参考来源</span>
+                    </div>
+                    <ul class="sources-list" id="chat-sources">
+                        <li class="source-empty">暂无来源</li>
+                    </ul>
+                </div>
+
+                <!-- 输入框 -->
+                <div class="input-container">
+                    <form id="chat-form" class="input-form">
+                        <div class="input-wrapper">
+                            <input
+                                id="chat-input"
+                                type="text"
+                                placeholder="有什么可以帮你？"
+                                autocomplete="off"
+                                required
+                            />
+                            <button class="send-btn" type="submit" id="chat-send">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="chat-status" class="input-status"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

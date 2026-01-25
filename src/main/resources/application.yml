@@ -1,13 +1,6 @@
-# ===================================
-# 校园智能知识库系统配置文件
-# ===================================
-
 server:
   port: 8000
 
-# ===================================
-# 数据源配置
-# ===================================
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/rag?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
@@ -32,9 +25,6 @@ spring:
   codec:
     max-in-memory-size: 16MB
 
-# ===================================
-# 对象存储配置
-# ===================================
 minio:
   endpoint: http://localhost:9000
   accessKey: minioadmin
@@ -42,36 +32,25 @@ minio:
   bucketName: uploads
   publicUrl: http://localhost:9000
 
-# ===================================
-# 文档处理配置
-# ===================================
 file:
   parsing:
     chunk-size: 512
     buffer-size: 8192
     max-memory-threshold: 0.8
 
-# ===================================
-# 搜索引擎配置
-# ===================================
 elasticsearch:
   host: localhost
   port: 9200
   scheme: http
+  index: knowledge
   username: elastic
 
-# ===================================
-# 大语言模型配置
-# ===================================
 deepseek:
   api:
     url: https://api.deepseek.com/v1
     model: deepseek-chat
     key: sk-44adec67fab742ada7df587f5c644918
 
-# ===================================
-# 向量编码配置
-# ===================================
 embedding:
   api:
     url: https://dashscope.aliyuncs.com/compatible-mode/v1
@@ -80,9 +59,6 @@ embedding:
     batch-size: 10
     dimension: 2048
 
-# ===================================
-# AI提示词与生成参数配置
-# ===================================
 ai:
   prompt:
     rules: |
@@ -100,3 +76,73 @@ ai:
     temperature: 0.3
     max-tokens: 2000
     top-p: 0.9
+
+rag:
+  rewrite:
+    enabled: true
+    variants: 3
+    prompt: |
+      你是检索查询改写助手，请根据用户问题生成多条可用于检索的改写：
+      1. 每行只输出一条改写
+      2. 不要编号或引号
+      3. 保持简洁，避免增加新事实
+  hyde:
+    enabled: true
+    max-tokens: 256
+    prompt: |
+      请根据用户问题生成一个可能的理想答案，用于检索。
+      要求：
+      1. 
+      2. 80-150字
+      3. 不要编造具体数值或机构名称
+  fusion:
+    enabled: true
+    rrf-k: 60
+    max-queries: 4
+  rerank:
+    enabled: true
+    max-candidates: 8
+    snippet-length: 200
+    prompt: |
+      你是检索重排助手，请根据用户问题为候选片段打相关度分数。
+      要求：
+      1. 评分范围 0.0-1.0，越高越相关
+      2. 只输出 “id:score” 每行一条
+      3. 不要输出多余解释或符号
+  routing:
+    enabled: true
+    use-llm: false
+    max-tags: 4
+    prompt: |
+      你是检索路由助手，请从用户问题中抽取可能的元数据过滤条件。
+      只输出 JSON，字段如下：
+      {
+        "department": "学院或部门",
+        "docType": "文档类型",
+        "policyYear": "年份",
+        "tags": ["标签1","标签2"]
+      }
+      若无法确定请输出空字符串或空数组，不要输出解释。
+  crag:
+    enabled: true
+    use-llm: true
+    min-score: 0.2
+    review-top-k: 3
+    fallback-multiplier: 2
+    prompt: |
+      你是检索质量评估器，请根据问题和候选片段判断是否足以回答。
+      只输出 JSON，字段如下：
+      {
+        "action": "ANSWER|REFINE|CLARIFY|NO_ANSWER",
+        "clarifyQuestion": "当需要澄清时给出一句问题"
+      }
+      如果问题本身模糊返回 CLARIFY；资料不足返回 REFINE 或 NO_ANSWER。
+    clarify-prompt: |
+      你是问答助手，请基于用户问题生成一个澄清问题，帮助补充场景信息。
+      要求：
+      1. 一句话
+      2. 不要给出答案
+      3. 使用简体中文
+  feedback:
+    enabled: true
+    max-boost: 0.15

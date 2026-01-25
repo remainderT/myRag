@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base" content="">
+    <title>文档管理 - 北航智能助手</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- 飞机剪影 -->
+                                <path d="M20 8L32 20L28 22L20 18L12 22L8 20L20 8Z" fill="currentColor" opacity="0.9"/>
+                                <path d="M20 18V32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M14 28L20 32L26 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="logo-text">
+                            <h1 class="logo-title">北航智能助手</h1>
+                            <p class="logo-subtitle">BUAA AI Assistant</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="nav-menu">
+                    <a class="nav-item" href="index.html">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        <span>对话</span>
+                    </a>
+                    <a class="nav-item active" href="docs.html">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                        </svg>
+                        <span>文档管理</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <div class="system-status">
+                        <div class="status-indicator"></div>
+                        <span>系统正常</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content doc-main">
+            <!-- 顶部工具栏 -->
+            <div class="doc-toolbar">
+                <div class="toolbar-left">
+                    <h2 class="doc-page-title">文档管理</h2>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn primary" id="upload-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        <span>上传文档</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 搜索和过滤 -->
+            <div class="doc-filters">
+                <div class="filter-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input
+                        type="text"
+                        id="doc-search-input"
+                        placeholder="搜索文档名称..."
+                        class="filter-input"
+                    />
+                </div>
+                <div class="filter-selects">
+                    <select id="doc-visibility-filter" class="filter-select">
+                        <option value="">所有可见性</option>
+                        <option value="PRIVATE">私有</option>
+                        <option value="PUBLIC">公开</option>
+                    </select>
+                    <select id="doc-type-filter" class="filter-select">
+                        <option value="">所有类型</option>
+                        <option value="pdf">PDF</option>
+                        <option value="doc">Word</option>
+                        <option value="xls">Excel</option>
+                        <option value="ppt">PPT</option>
+                        <option value="txt">文本</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 文档表格 -->
+            <div class="doc-table-wrapper">
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th width="40%">文档名称</th>
+                            <th width="12%">文件大小</th>
+                            <th width="18%">上传时间</th>
+                            <th width="12%">可见性</th>
+                            <th width="18%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doc-table-body">
+                        <tr class="doc-empty-row">
+                            <td colspan="5">
+                                <div class="doc-table-empty">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <path d="M14 2v6h6"/>
+                                    </svg>
+                                    <p>暂无文档</p>
+                                    <p class="empty-hint">点击"上传文档"按钮上传你的第一个文档</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 状态消息 -->
+            <div id="doc-status" class="doc-status-message"></div>
+        </main>
+    </div>
+
+    <!-- 上传模态框 -->
+    <div id="upload-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>上传文档</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+
+            <form id="upload-form" class="modal-body">
+                <div class="upload-zone-modal" id="upload-zone-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <path d="M17 8l-5-5-5 5"/>
+                        <path d="M12 3v12"/>
+                    </svg>
+                    <div class="upload-text">拖拽文件到此处或点击选择</div>
+                    <div class="upload-hint">支持 PDF、Word、Excel、PPT、Markdown 等格式，最大 100MB</div>
+                    <input id="upload-input" type="file" accept=".pdf,.doc,.docx,.txt,.md,.html,.htm,.xls,.xlsx,.ppt,.pptx,.rtf,.csv" style="display: none;">
+                </div>
+
+                <div class="file-name-display" id="file-name-display" style="display: none;">
+                    <div class="file-info">
+                        <span id="file-name-text"></span>
+                        <button type="button" class="btn-small" onclick="document.getElementById('upload-input').click()">重新选择</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>可见性</label>
+                    <select id="upload-visibility">
+                        <option value="PRIVATE">🔒 私有</option>
+                        <option value="PUBLIC">🌐 公开</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>文档类型（可选）</label>
+                    <input id="upload-doc-type" type="text" placeholder="如：综测、请假等">
+                </div>
+
+                <div class="form-group">
+                    <label>所属部门（可选）</label>
+                    <input id="upload-department" type="text" placeholder="如：教务处、学院等">
+                </div>
+
+                <div class="form-group">
+                    <label>政策年份（可选）</label>
+                    <input id="upload-policy-year" type="text" placeholder="如：2024、2025">
+                </div>
+
+                <div class="form-group">
+                    <label>标签（可选）</label>
+                    <input id="upload-tags" type="text" placeholder="多个标签用逗号分隔">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn ghost" id="modal-cancel">取消</button>
+                    <button type="submit" class="btn primary">上传</button>
+                </div>
+
+                <div id="upload-status" class="upload-status-text"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
