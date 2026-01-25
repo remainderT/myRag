@@ -1,0 +1,55 @@
+package org.buaa.rag.controller;
+
+import org.buaa.rag.common.convention.result.Result;
+import org.buaa.rag.dto.FeedbackRequest;
+import org.buaa.rag.dto.RetrievalMatch;
+import org.buaa.rag.service.ChatService;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api")
+public class ChatController {
+
+    private final ChatService chatService;
+
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
+    }
+
+    @PostMapping("/chat")
+    public Result<Map<String, Object>> handleChatRequest(@RequestBody Map<String, String> payload) {
+        return chatService.handleChatRequest(payload);
+    }
+
+    @GetMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter handleChatStream(@RequestParam String message,
+                                       @RequestParam(defaultValue = "anonymous") String userId) {
+        return chatService.handleChatStream(message, userId);
+    }
+
+    @GetMapping("/search")
+    public Result<List<RetrievalMatch>> handleSearchRequest(@RequestParam String query,
+                                                            @RequestParam(defaultValue = "10") int topK,
+                                                            @RequestParam(required = false) String userId,
+                                                            @RequestParam(required = false) String department,
+                                                            @RequestParam(required = false) String docType,
+                                                            @RequestParam(required = false) String policyYear,
+                                                            @RequestParam(required = false) String tags) {
+        return chatService.handleSearchRequest(query, topK, userId, department, docType, policyYear, tags);
+    }
+
+    @PostMapping("/feedback")
+    public Result<Map<String, Object>> handleFeedback(@RequestBody FeedbackRequest request) {
+        return chatService.handleFeedback(request);
+    }
+}

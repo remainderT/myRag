@@ -57,10 +57,11 @@ function getApiBase() {
 }
 
 const state = {
-    userId: getOrCreateUserId(),
+    userId: 'test',
     activeStream: null,
     selectedFile: null,
-    allDocuments: []
+    allDocuments: [],
+    shouldRefreshDocuments: false
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -116,6 +117,9 @@ if (uploadBtn && uploadModal) {
         if (fileNameDisplay) {
             fileNameDisplay.style.display = 'none';
         }
+        if (uploadStatus) {
+            setStatus(uploadStatus, '');
+        }
         if (uploadInput) {
             uploadInput.value = '';
         }
@@ -124,19 +128,19 @@ if (uploadBtn && uploadModal) {
 
 if (modalClose && uploadModal) {
     modalClose.addEventListener('click', () => {
-        uploadModal.style.display = 'none';
+        closeUploadModal();
     });
 }
 
 if (modalCancel && uploadModal) {
     modalCancel.addEventListener('click', () => {
-        uploadModal.style.display = 'none';
+        closeUploadModal();
     });
 }
 
 if (uploadModal) {
     uploadModal.querySelector('.modal-overlay')?.addEventListener('click', () => {
-        uploadModal.style.display = 'none';
+        closeUploadModal();
     });
 }
 
@@ -229,6 +233,7 @@ if (hasUpload) {
                 const fileName = result.data?.fileName || state.selectedFile.name;
                 const message = result.data?.message || '上传成功';
                 setStatus(uploadStatus, `${message}：${fileName}`);
+                state.shouldRefreshDocuments = true;
 
                 // 重置表单
                 uploadInput.value = '';
@@ -254,15 +259,7 @@ if (hasUpload) {
 
                 // 延迟关闭模态框并刷新列表
                 setTimeout(() => {
-                    if (uploadModal) {
-                        uploadModal.style.display = 'none';
-                    }
-                    if (uploadStatus) {
-                        uploadStatus.textContent = '';
-                    }
-                    if (hasDocTable) {
-                        loadDocumentList();
-                    }
+                    closeUploadModal();
                 }, 1500);
             } else {
                 const errorMessage = result?.message || `上传失败（状态码 ${response.status}）`;
@@ -297,16 +294,6 @@ if (footerYear) {
 // 页面加载时获取文档列表
 if (hasDocTable) {
     loadDocumentList();
-}
-
-function getOrCreateUserId() {
-    const storageKey = 'buaa_ai_user_id';
-    let userId = localStorage.getItem(storageKey);
-    if (!userId) {
-        userId = `buaa_${Math.random().toString(36).slice(2, 10)}`;
-        localStorage.setItem(storageKey, userId);
-    }
-    return userId;
 }
 
 function setSelectedFile(file) {
@@ -379,6 +366,19 @@ function setStatus(element, text) {
     if (element) {
         element.textContent = text;
     }
+}
+
+function closeUploadModal() {
+    if (uploadModal) {
+        uploadModal.style.display = 'none';
+    }
+    if (uploadStatus) {
+        setStatus(uploadStatus, '');
+    }
+    if (state.shouldRefreshDocuments && hasDocTable) {
+        loadDocumentList();
+    }
+    state.shouldRefreshDocuments = false;
 }
 
 function streamChat(message) {

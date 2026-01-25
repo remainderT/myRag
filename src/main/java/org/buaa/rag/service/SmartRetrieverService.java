@@ -1,0 +1,74 @@
+package org.buaa.rag.service;
+
+import org.buaa.rag.dto.MetadataFilter;
+import org.buaa.rag.dto.RetrievalMatch;
+
+import java.util.List;
+
+/**
+ * 智能检索服务接口
+ * 结合向量检索和文本匹配的混合搜索策略
+ */
+public interface SmartRetrieverService {
+
+    /**
+     * 执行混合检索
+     * 
+     * @param queryText 查询文本
+     * @param topK 返回结果数量
+     * @return 检索匹配结果列表
+     */
+    List<RetrievalMatch> retrieve(String queryText, int topK);
+
+    /**
+     * 执行混合检索（带权限过滤）
+     *
+     * @param queryText 查询文本
+     * @param topK 返回结果数量
+     * @param userId 用户标识
+     * @return 检索匹配结果列表
+     */
+    List<RetrievalMatch> retrieve(String queryText, int topK, String userId);
+
+    /**
+     * 执行混合检索（带权限和元数据过滤）
+     *
+     * @param queryText 查询文本
+     * @param topK 返回结果数量
+     * @param userId 用户标识
+     * @param filter 元数据过滤条件
+     * @return 检索匹配结果列表
+     */
+    List<RetrievalMatch> retrieve(String queryText, int topK, String userId, MetadataFilter filter);
+
+    /**
+     * 向量检索（仅向量召回）
+     *
+     * @param queryText 查询文本
+     * @param topK 返回结果数量
+     * @param userId 用户标识
+     * @return 检索匹配结果列表
+     */
+    List<RetrievalMatch> retrieveVectorOnly(String queryText, int topK, String userId);
+
+    /**
+     * 向量检索（仅向量召回，带元数据过滤）
+     */
+    List<RetrievalMatch> retrieveVectorOnly(String queryText,
+                                           int topK,
+                                           String userId,
+                                           MetadataFilter filter);
+
+    /**
+     * 纯文本检索（显式使用）
+     */
+    List<RetrievalMatch> retrieveTextOnly(String queryText,
+                                         int topK,
+                                         String userId,
+                                         MetadataFilter filter);
+
+    /**
+     * 记录用户反馈
+     */
+    void recordFeedback(Long messageId, String userId, int score, String comment);
+}

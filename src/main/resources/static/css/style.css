@@ -1169,19 +1169,27 @@ body {
     display: flex;
     gap: 12px;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 24px;
     padding-top: 20px;
     border-top: 1px solid var(--border);
 }
 
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
 .upload-status-text {
-    margin-top: 16px;
+    margin: 0;
+    margin-right: auto;
     font-size: 13px;
     color: var(--text-secondary);
-    text-align: center;
+    text-align: left;
     padding: 10px;
     border-radius: var(--radius-md);
     display: none;
+    flex: 1;
 }
 
 .upload-status-text:not(:empty) {

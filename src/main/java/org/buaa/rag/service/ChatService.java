@@ -1,0 +1,42 @@
+package org.buaa.rag.service;
+
+import org.buaa.rag.dto.ChatResponse;
+import org.buaa.rag.dto.FeedbackRequest;
+import org.buaa.rag.dto.RetrievalMatch;
+import org.buaa.rag.common.convention.result.Result;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 聊天服务接口
+ */
+public interface ChatService {
+
+    /**
+     * 处理聊天请求
+     */
+    Result<Map<String, Object>> handleChatRequest(Map<String, String> payload);
+
+    /**
+     * 处理聊天流式请求
+     */
+    SseEmitter handleChatStream(String message, String userId);
+
+    /**
+     * 处理搜索请求
+     */
+    Result<List<RetrievalMatch>> handleSearchRequest(String query,
+                                                     int topK,
+                                                     String userId,
+                                                     String department,
+                                                     String docType,
+                                                     String policyYear,
+                                                     String tags);
+
+    /**
+     * 处理反馈请求
+     */
+    Result<Map<String, Object>> handleFeedback(FeedbackRequest request);
+}
