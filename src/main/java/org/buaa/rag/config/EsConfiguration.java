@@ -36,9 +36,6 @@ public class EsConfiguration {
     @Value("${elasticsearch.username:elastic}")
     private String userName;
 
-    @Value("${elasticsearch.password:changeme}")
-    private String userPassword;
-
     /**
      * 构建Elasticsearch客户端实例
      * 
@@ -50,55 +47,12 @@ public class EsConfiguration {
             new HttpHost(esHost, esPort, protocol)
         );
 
-        // 配置身份认证
-        if (isAuthenticationRequired()) {
-            configureAuthentication(clientBuilder);
-        }
-
         RestClient restClient = clientBuilder.build();
         RestClientTransport transport = new RestClientTransport(
-            restClient, 
+            restClient,
             new JacksonJsonpMapper()
         );
 
         return new ElasticsearchClient(transport);
-    }
-
-    /**
-     * 判断是否需要身份认证
-     */
-    private boolean isAuthenticationRequired() {
-        return userName != null && !userName.trim().isEmpty();
-    }
-
-    /**
-     * 配置身份认证和SSL
-     */
-    private void configureAuthentication(RestClientBuilder builder) {
-        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(
-            AuthScope.ANY, 
-            new UsernamePasswordCredentials(userName, userPassword)
-        );
-
-        builder.setHttpClientConfigCallback(httpClientBuilder -> {
-            configureSslContext(httpClientBuilder);
-            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-        });
-    }
-
-    /**
-     * 配置SSL上下文（开发环境跳过证书验证）
-     */
-    private void configureSslContext(org.apache.http.impl.nio.client.HttpAsyncClientBuilder httpClientBuilder) {
-        try {
-            SSLContext sslContext = SSLContexts.custom()
-                .loadTrustMaterial(null, (X509Certificate[] chain, String authType) -> true)
-                .build();
-            httpClientBuilder.setSSLContext(sslContext);
-            httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
-        } catch (Exception e) {
-            // 忽略SSL配置错误
-        }
     }
 }

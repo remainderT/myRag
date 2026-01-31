@@ -18,9 +18,9 @@ import java.util.*;
  * 负责将文本转换为向量表示
  */
 @Component
-public class VectorEncodingTool {
+public class VectorEncoding {
 
-    private static final Logger log = LoggerFactory.getLogger(VectorEncodingTool.class);
+    private static final Logger log = LoggerFactory.getLogger(VectorEncoding.class);
     
     @Value("${embedding.api.model}")
     private String encodingModel;
@@ -32,9 +32,10 @@ public class VectorEncodingTool {
     private int vectorDimension;
     
     private final WebClient httpClient;
+
     private final ObjectMapper jsonParser;
 
-    public VectorEncodingTool(WebClient embeddingWebClient, ObjectMapper objectMapper) {
+    public VectorEncoding(WebClient embeddingWebClient, ObjectMapper objectMapper) {
         this.httpClient = embeddingWebClient;
         this.jsonParser = objectMapper;
     }

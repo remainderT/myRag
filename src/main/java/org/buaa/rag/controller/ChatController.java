@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rag/chat")
 public class ChatController {
 
     private final ChatService chatService;
@@ -31,7 +31,7 @@ public class ChatController {
         return chatService.handleChatRequest(payload);
     }
 
-    @GetMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter handleChatStream(@RequestParam String message,
                                        @RequestParam(defaultValue = "anonymous") String userId) {
         return chatService.handleChatStream(message, userId);

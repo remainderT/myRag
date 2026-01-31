@@ -18,7 +18,7 @@ import org.buaa.rag.dao.mapper.DocumentMapper;
 import org.buaa.rag.dao.mapper.TextSegmentMapper;
 import org.buaa.rag.dto.ContentFragment;
 import org.buaa.rag.service.DocumentService;
-import org.buaa.rag.tool.VectorEncodingTool;
+import org.buaa.rag.tool.VectorEncoding;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import io.minio.GetObjectArgs;
@@ -71,7 +71,7 @@ public class DocumentServiceImpl implements DocumentService {
     private MinioClient minioClient;
 
     @Autowired
-    private VectorEncodingTool encodingService;
+    private VectorEncoding encodingService;
 
     @Autowired
     private ElasticsearchClient searchClient;

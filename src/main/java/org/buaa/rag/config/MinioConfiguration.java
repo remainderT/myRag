@@ -45,14 +45,6 @@ public class MinioConfiguration {
     }
 
     /**
-     * 提供公共访问URL
-     */
-    @Bean
-    public String minioPublicUrl() {
-        return publicAccessUrl;
-    }
-
-    /**
      * 构建MinIO客户端
      */
     private MinioClient buildMinioClient() {

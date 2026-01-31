@@ -34,6 +34,11 @@ public final class UserContext {
         return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getSalt).orElse(null);
     }
 
+    public static String getMail() {
+        UserInfoDTO userInfoDTO = USER_THREAD_LOCAL.get();
+        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getMail).orElse(null);
+    }
+
     public static void removeUser() {
         USER_THREAD_LOCAL.remove();
     }

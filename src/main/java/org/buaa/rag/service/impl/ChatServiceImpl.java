@@ -9,7 +9,7 @@ import org.buaa.rag.dao.entity.MessageDO;
 import org.buaa.rag.dao.entity.MessageSourceDO;
 import org.buaa.rag.dao.mapper.MessageMapper;
 import org.buaa.rag.dao.mapper.MessageSourceMapper;
-import org.buaa.rag.dto.ChatResponse;
+import org.buaa.rag.dto.resp.ChatRespDTO;
 import org.buaa.rag.dto.CragDecision;
 import org.buaa.rag.dto.FeedbackRequest;
 import org.buaa.rag.dto.MetadataFilter;
@@ -19,7 +19,7 @@ import org.buaa.rag.service.ChatService;
 import org.buaa.rag.service.QueryAnalysisService;
 import org.buaa.rag.service.RetrievalPostProcessorService;
 import org.buaa.rag.service.SmartRetrieverService;
-import org.buaa.rag.tool.LlmChatTool;
+import org.buaa.rag.tool.LlmChat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class ChatServiceImpl implements ChatService {
     private RetrievalPostProcessorService postProcessorService;
 
     @Autowired
-    private LlmChatTool llmService;
+    private LlmChat llmService;
 
     @Autowired
     private MessageMapper messageMapper;
@@ -87,7 +87,7 @@ public class ChatServiceImpl implements ChatService {
             throw new ClientException(RagErrorCode.MESSAGE_EMPTY);
         }
 
-        ChatResponse aiResponse = handleMessage(userId, userMessage);
+        ChatRespDTO aiResponse = handleMessage(userId, userMessage);
         return Results.success(Map.of(
             "response", aiResponse.getResponse(),
             "sources", aiResponse.getSources()
@@ -192,7 +192,7 @@ public class ChatServiceImpl implements ChatService {
         return Results.success(Map.of("messageId", request.getMessageId(), "score", score));
     }
 
-    private ChatResponse handleMessage(String userId, String userMessage) {
+    private ChatRespDTO handleMessage(String userId, String userMessage) {
         log.info("处理用户消息 - 用户: {}", userId);
 
         try {
@@ -215,7 +215,7 @@ public class ChatServiceImpl implements ChatService {
                 || decision.getAction() == CragDecision.Action.NO_ANSWER) {
                 String response = decision.getMessage();
                 Long messageId = appendToHistory(sessionId, userId, userMessage, response, retrievalResults);
-                return new ChatResponse(response, retrievalResults, messageId);
+                return new ChatRespDTO(response, retrievalResults, messageId);
             }
 
             if (decision.getAction() == CragDecision.Action.REFINE) {
@@ -230,7 +230,7 @@ public class ChatServiceImpl implements ChatService {
                 } else {
                     String response = postProcessorService.noResultMessage();
                     Long messageId = appendToHistory(sessionId, userId, userMessage, response, retrievalResults);
-                    return new ChatResponse(response, retrievalResults, messageId);
+                    return new ChatRespDTO(response, retrievalResults, messageId);
                 }
             }
 
@@ -272,7 +272,7 @@ public class ChatServiceImpl implements ChatService {
             Long messageId = appendToHistory(sessionId, userId, userMessage, finalResponse, retrievalResults);
 
             log.info("消息处理完成 - 用户: {}", userId);
-            return new ChatResponse(finalResponse, retrievalResults, messageId);
+            return new ChatRespDTO(finalResponse, retrievalResults, messageId);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

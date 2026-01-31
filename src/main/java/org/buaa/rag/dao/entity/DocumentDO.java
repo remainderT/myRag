@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import org.buaa.rag.common.database.BaseDO;
+
 /**
  * 文档记录实体
  * 存储上传文档的元数据信息
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("document")
-public class DocumentDO {
+public class DocumentDO extends BaseDO {
 
     private Long id;
 

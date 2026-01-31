@@ -1,8 +1,12 @@
 package org.buaa.rag.config;
 
+import org.buaa.rag.common.user.LoginCheckFilter;
+import org.buaa.rag.common.user.RefreshTokenFilter;
+import org.buaa.rag.dao.mapper.UserMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * 用户配置自动装配

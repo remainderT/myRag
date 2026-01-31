@@ -1,6 +1,5 @@
 package org.buaa.rag.service;
 
-import org.buaa.rag.dto.ChatResponse;
 import org.buaa.rag.dto.FeedbackRequest;
 import org.buaa.rag.dto.RetrievalMatch;
 import org.buaa.rag.common.convention.result.Result;

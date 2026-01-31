@@ -2,11 +2,23 @@ package org.buaa.rag.service;
 
 import java.util.List;
 
+import org.buaa.rag.dao.entity.UserDO;
+import org.buaa.rag.dto.req.UserLoginReqDTO;
+import org.buaa.rag.dto.req.UserRegisterReqDTO;
+import org.buaa.rag.dto.req.UserUpdateReqDTO;
+import org.buaa.rag.dto.resp.UserLoginRespDTO;
+import org.buaa.rag.dto.resp.UserRespDTO;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import jakarta.servlet.ServletRequest;
 
 public interface UserService extends IService<UserDO> {
+
+    /**
+     * 根据邮箱查询用户信息
+     */
+    UserRespDTO getUserByMail(String mail);
 
     /**
      *  查询邮箱是否已注册
@@ -43,18 +55,4 @@ public interface UserService extends IService<UserDO> {
      */
     void update(UserUpdateReqDTO requestParam);
 
-    /**
-     * 找回用户名
-     */
-    Boolean forgetUsername(String mail);
-
-    /**
-     * 发送重置密码验证码
-     */
-    Boolean sendResetPasswordCode(String mail);
-
-    /**
-     * 重置密码
-     */
-    Boolean resetPassword(UserResetPwdReqDTO requestParam);
 }

@@ -1,8 +1,13 @@
 package org.buaa.rag.common.user;
 
+import static org.buaa.rag.common.enums.UserErrorCodeEnum.USER_TOKEN_NULL;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+
+import org.buaa.rag.common.convention.exception.ClientException;
+import org.buaa.rag.common.convention.result.Results;
 
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;

@@ -15,15 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rag/document")
+@RequiredArgsConstructor
 public class DocumentController {
 
     private final DocumentService documentService;
-
-    public DocumentController(DocumentService documentService) {
-        this.documentService = documentService;
-    }
 
     @PostMapping("/upload")
     public Result<Map<String, Object>> handleFileUpload(@RequestParam("file") MultipartFile uploadedFile,
@@ -44,12 +43,12 @@ public class DocumentController {
         );
     }
 
-    @GetMapping("/documents")
+    @GetMapping("/list")
     public Result<List<DocumentDO>> listDocuments(@RequestParam String userId) {
         return documentService.listDocuments(userId);
     }
 
-    @DeleteMapping("/documents/{md5Hash}")
+    @DeleteMapping("/{md5Hash}")
     public Result<Map<String, Object>> deleteDocument(@PathVariable String md5Hash,
                                                       @RequestParam String userId) {
         return documentService.deleteDocument(md5Hash, userId);

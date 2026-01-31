@@ -1,10 +1,12 @@
-package org.buaa.rag.dto;
+package org.buaa.rag.dto.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
+import org.buaa.rag.dto.RetrievalMatch;
 
 /**
  * 对话响应DTO
@@ -13,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatResponse {
+public class ChatRespDTO {
     private String response;
     private List<RetrievalMatch> sources;
     private Long messageId;

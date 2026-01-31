@@ -6,7 +6,7 @@ import org.buaa.rag.config.RagConfiguration;
 import org.buaa.rag.dto.MetadataFilter;
 import org.buaa.rag.dto.QueryPlan;
 import org.buaa.rag.service.QueryAnalysisService;
-import org.buaa.rag.tool.LlmChatTool;
+import org.buaa.rag.tool.LlmChat;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,13 +83,13 @@ public class QueryAnalysisServiceImpl implements QueryAnalysisService {
         DEPARTMENT_KEYWORDS.put("物理学院", "物理学院");
     }
 
-    private final LlmChatTool llmChatTool;
+    private final LlmChat llmChat;
     private final RagConfiguration ragConfiguration;
     private final ObjectMapper objectMapper;
 
-    public QueryAnalysisServiceImpl(LlmChatTool llmChatTool,
+    public QueryAnalysisServiceImpl(LlmChat llmChat,
                                     RagConfiguration ragConfiguration) {
-        this.llmChatTool = llmChatTool;
+        this.llmChat = llmChat;
         this.ragConfiguration = ragConfiguration;
         this.objectMapper = new ObjectMapper();
     }
@@ -126,7 +126,7 @@ public class QueryAnalysisServiceImpl implements QueryAnalysisService {
             prompt = DEFAULT_REWRITE_PROMPT;
         }
 
-        String output = llmChatTool.generateCompletion(prompt, userQuery, 256);
+        String output = llmChat.generateCompletion(prompt, userQuery, 256);
         return normalizeRewrites(output, ragConfiguration.getRewrite().getVariants());
     }
 
@@ -140,7 +140,7 @@ public class QueryAnalysisServiceImpl implements QueryAnalysisService {
             prompt = DEFAULT_HYDE_PROMPT;
         }
 
-        return llmChatTool.generateCompletion(
+        return llmChat.generateCompletion(
             prompt,
             userQuery,
             ragConfiguration.getHyde().getMaxTokens()
@@ -214,7 +214,7 @@ public class QueryAnalysisServiceImpl implements QueryAnalysisService {
             prompt = DEFAULT_ROUTING_PROMPT;
         }
 
-        String output = llmChatTool.generateCompletion(prompt, query, 256);
+        String output = llmChat.generateCompletion(prompt, query, 256);
         if (output == null || output.isBlank()) {
             return new MetadataFilter();
         }

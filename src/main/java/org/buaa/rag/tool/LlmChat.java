@@ -23,9 +23,9 @@ import java.util.function.Consumer;
  * 负责与LLM API进行流式交互
  */
 @Service
-public class LlmChatTool {
+public class LlmChat {
 
-    private static final Logger log = LoggerFactory.getLogger(LlmChatTool.class);
+    private static final Logger log = LoggerFactory.getLogger(LlmChat.class);
     
     private final WebClient httpClient;
     private final String apiToken;
@@ -33,10 +33,10 @@ public class LlmChatTool {
     private final LlmConfiguration llmConfiguration;
     private final ObjectMapper jsonMapper;
     
-    public LlmChatTool(@Value("${deepseek.api.url}") String baseUrl,
-                       @Value("${deepseek.api.key}") String token,
-                       @Value("${deepseek.api.model}") String model,
-                       LlmConfiguration config) {
+    public LlmChat(@Value("${deepseek.api.url}") String baseUrl,
+                   @Value("${deepseek.api.key}") String token,
+                   @Value("${deepseek.api.model}") String model,
+                   LlmConfiguration config) {
         this.httpClient = buildWebClient(baseUrl, token);
         this.apiToken = token;
         this.modelIdentifier = model;

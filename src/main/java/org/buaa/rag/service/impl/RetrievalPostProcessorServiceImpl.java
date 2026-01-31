@@ -7,7 +7,7 @@ import org.buaa.rag.config.RagConfiguration;
 import org.buaa.rag.dto.CragDecision;
 import org.buaa.rag.dto.RetrievalMatch;
 import org.buaa.rag.service.RetrievalPostProcessorService;
-import org.buaa.rag.tool.LlmChatTool;
+import org.buaa.rag.tool.LlmChat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -54,15 +54,15 @@ public class RetrievalPostProcessorServiceImpl implements RetrievalPostProcessor
 3. 不要输出多余解释或符号
 """;
 
-    private final LlmChatTool llmChatTool;
+    private final LlmChat llmChat;
     private final RagConfiguration ragConfiguration;
     private final LlmConfiguration llmConfiguration;
     private final ObjectMapper objectMapper;
 
-    public RetrievalPostProcessorServiceImpl(LlmChatTool llmChatTool,
-                                            RagConfiguration ragConfiguration,
-                                            LlmConfiguration llmConfiguration) {
-        this.llmChatTool = llmChatTool;
+    public RetrievalPostProcessorServiceImpl(LlmChat llmChat,
+                                             RagConfiguration ragConfiguration,
+                                             LlmConfiguration llmConfiguration) {
+        this.llmChat = llmChat;
         this.ragConfiguration = ragConfiguration;
         this.llmConfiguration = llmConfiguration;
         this.objectMapper = new ObjectMapper();
@@ -121,7 +121,7 @@ public class RetrievalPostProcessorServiceImpl implements RetrievalPostProcessor
         List<RetrievalMatch> candidates = new ArrayList<>(matches.subList(0, candidateLimit));
         String prompt = buildRerankPrompt(query, candidates, config);
 
-        String output = llmChatTool.generateCompletion(
+        String output = llmChat.generateCompletion(
             resolveRerankPrompt(config),
             prompt,
             256
@@ -195,7 +195,7 @@ public class RetrievalPostProcessorServiceImpl implements RetrievalPostProcessor
                 .append("\n");
         }
 
-        String output = llmChatTool.generateCompletion(prompt, content.toString(), 256);
+        String output = llmChat.generateCompletion(prompt, content.toString(), 256);
         if (output == null || output.isBlank()) {
             return null;
         }
@@ -243,7 +243,7 @@ public class RetrievalPostProcessorServiceImpl implements RetrievalPostProcessor
         if (prompt == null || prompt.isBlank()) {
             prompt = DEFAULT_CLARIFY_PROMPT;
         }
-        String output = llmChatTool.generateCompletion(prompt, query, 64);
+        String output = llmChat.generateCompletion(prompt, query, 64);
         if (output == null || output.isBlank()) {
             return "为了更准确回答，请补充问题的具体场景，例如涉及哪一年、学院或制度名称。";
         }

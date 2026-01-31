@@ -28,14 +28,14 @@ public class UserInfoDTO {
     private String username;
 
     /**
+     * 邮箱
+     */
+    private String mail;
+
+    /**
      * 盐
      */
     private String salt;
-
-    /**
-     * 学生类别
-     */
-    private String userType;
 
     /**
      * Token
